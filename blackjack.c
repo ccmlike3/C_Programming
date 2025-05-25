@@ -72,42 +72,42 @@ int	print_result(void) //int형으로 수정 필요
 	printf("플레이어 점수: %d\n", sum[1]);
 	if ((check(sum[1], 1) == 2) && (check(sum[0], 0) != 2)) //플레이어가 블랙잭인 경우
 	{
-		printf("당신의 블랙잭\n");
+		printf("당신의 블랙잭\n\n");
 		return (2);
 	}
 	else if (check(sum[0], 0) == 2 && check(sum[1], 1) != 2) //딜러가 블랙잭인 경우
 	{
-		printf("딜러의 블랙잭\n");
+		printf("딜러의 블랙잭\n\n");
 		return (-2);
 	}
 	else if (check(sum[1], 1) == -1) // 플레이어가 버스트인 경우
 	{
-		printf("당신의 패배\n");
+		printf("당신의 패배\n\n");
 		return (-1);
 	}
 	else if (check(sum[0], 0) == -1) // 딜러만 버스트인 경우
 	{
-		printf("당신의 승리\n");
+		printf("당신의 승리\n\n");
 		return (1);
 	}
 	else if (sum[1] == 21 && sum[0] != 21) // 플레이어의 합만 21인 경우
 	{
-		printf("당신의 승리\n");
+		printf("당신의 승리\n\n");
 		return (1);
 	}
 	else if (sum[1] > sum[0]) // 플레이어의 합이 더 21에 가까운 경우
 	{
-		printf("당신의 승리\n");
+		printf("당신의 승리\n\n");
 		return (1);
 	}	
 	else if (sum[1] < sum[0]) // 딜러의 합이 21에 더 가까운 경우
 	{
-		printf("딜러의 승리\n");
+		printf("딜러의 승리\n\n");
 		return (-1);
 	}
 	else // 양쪽이 블랙잭 또는 플레이어가 버스트가 아닌 상황에서 합이 같은 경우 
 	{
-		printf("무승부\n");
+		printf("무승부\n\n");
 		return (0);
 	}
 }
@@ -212,12 +212,12 @@ int	cpu_turn(void)
 	}
 }
 
-
 /*
 * 게임을 진행하는 함수 (게임 승리 시 양수 반환, 패배 시 음수 반환, 무승부 시 0 반환)
 */
 int	game(void)
 {
+	printf("\n");
 	init_game(); //전역 변수 초기화 기능
 	/*
 	* 플레이어와 PC가 카드 2장을 뽑고 시작함.
@@ -234,7 +234,8 @@ int	game(void)
 	
 	printf("딜러의 카드: ");
 	print_hand(hand[0][0]);
-	printf("?(%d)\n", hand[0][1]);
+	printf("?\n");
+	//printf("?(%d)\n", hand[0][1]);
 
 	/*
 	* 플레이어의 카드 확인
