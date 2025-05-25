@@ -12,6 +12,32 @@ int		sum[2] = { 0 }; // 패의 점수 합
 int		trump_value[13] = { 11, 2, 3, 4, 5, 6, 7, 8, 9, 10, 10, 10, 10 }; // 카드가 가진 점수
 char	trump_card[13] = { 'A', '2', '3', '4', '5', '6', '7', '8', '9', 'T', 'K', 'Q', 'J' }; // 카드가 표시될 모습
 
+void init_game()
+{
+	int	i;
+	int	j;
+
+	i = 0;
+	while (i < 2)
+	{
+		j = 0;
+		while (hand[i][j])
+		{
+			hand[i][j] = 0;
+			j++;
+		}
+		i++;
+	}
+	
+	i = 0;
+	while (i < 2)
+	{
+		hand_index[i] = 2;
+		sum[i] = 0;
+		i++;
+	}
+}
+
 int	check(int sum, int index)
 {
 	if (sum == 21 && !(hand[index][2])) // 블랙잭(첫 턴 21)인 경우
@@ -130,8 +156,16 @@ int	player_turn(void) // 플레이어의 턴
 				print_hand(hand[1][i]);
 			printf("\n");
 		}
-		else // 아닐 경우 종료
+		else if (choice == 'n' || choice == 'N') //n을 입력하면 카드를 추가로 뽑지 않음.
+		{
+			printf("\n");
 			break;
+		}
+		else //잘못된 값을 처리함.
+		{
+			printf("잘못된 값입니다.\n\n");
+			continue;
+		}
 	}
 	return (sum_hand(1));
 }
@@ -154,6 +188,7 @@ int	cpu_turn(void)
 
 int	game(void) // 게임 승리 시 0 반환, 패배 시 1 반환
 {
+	init_game();
 	/*
 	* 플레이어와 PC가 카드 2장을 뽑고 시작함.
 	*/
@@ -201,8 +236,10 @@ int	game(void) // 게임 승리 시 0 반환, 패배 시 1 반환
 
 int	main(void)
 {
-	int				money;
 	int				result;
+	char			choice;
+	int				wallet;
+	int				money;
 	unsigned int	seed;
 
 	/*
@@ -213,19 +250,65 @@ int	main(void)
 
 	//printf("시드: %d\n", seed); //디버그용 코드
 
-	money = 1000;
-	printf("시작 자금: %d\n", money);
+	wallet = 1000;
+	money = 0;
+	printf("시작 자금: %u\n", wallet);
+	while (1)
+	{
+		if (wallet == 0) //자금 고갈 시 종료
+			break;
+		printf("배팅 금액: ");
+		scanf("%u", &money);
+		if (money <= 0)
+		{
+			printf("0보다 큰 값을 넣어야 합니다.\n");
+			money = 0;
+			continue;
+		}
+		else if (money > wallet)
+		{
+			printf("소지한 자금보다 큰 금액입니다.\n");
+			money = 0;
+			continue;
+		}
+		
+		wallet -= money;
+		result = game();
+		if (result == 0) // 무승부 시 원금 반환
+			money *= 1;
+		else if (result == 1) // 일반 승리 시 2배 지급
+			money *= 2;
+		else if (result == 2) // 블랙잭 승리 시 2.5배 지급
+			money *= 2.5;
+		else // 패배 시 자금 증발
+			money *= 0;
+		wallet += money;
 
-	result = game();
-	if (result == 0) // 무승부 시 원금 반환
-		money *= 1;
-	else if (result == 1) // 일반 승리 시 2배 지급
-		money *= 2;
-	else if (result == 2) // 블랙잭 승리 시 2.5배 지급
-		money *= 2.5;
-	else // 패배 시 자금 증발
-		money *= 0; 
-	printf("최종 자금: %d\n", money);
+		if (wallet == 0) // 소지금이 0일 경우 자동 종료
+		{
+			printf("자금을 소진하여 게임을 종료합니다.\n");
+			return (0);
+		}
+
+		while (1) // 계속 진행할지 물어봄.
+		{
+			printf("(현재 자금: %u)\n", wallet);
+			printf("게임을 계속 진행하시겠습니까? (y/n)");
+			scanf(" %c", &choice);
+			if (choice == 'y' || choice == 'Y')
+				break;
+			else if (choice == 'n' || choice == 'N')
+			{
+				printf("최종 자금: %u\n", wallet);
+				return (0);
+			}
+			else
+			{
+				printf("잘못된 값입니다.\n\n");
+			}
+		}
+	}
+	printf("최종 자금: %u\n", wallet);
 
 	return (0);
 }
