@@ -12,6 +12,9 @@ int		sum[2] = { 0 }; // 패의 점수 합
 int		trump_value[13] = { 11, 2, 3, 4, 5, 6, 7, 8, 9, 10, 10, 10, 10 }; // 카드가 가진 점수
 char	trump_card[13] = { 'A', '2', '3', '4', '5', '6', '7', '8', '9', 'T', 'K', 'Q', 'J' }; // 카드가 표시될 모습
 
+/*
+* 게임을 시작할 경우에 이전 게임에서 수정된 사항들을 초기화하는 함수
+*/
 void init_game()
 {
 	int	i;
@@ -38,6 +41,10 @@ void init_game()
 	}
 }
 
+/*
+* 카드의 값이 유효한지 확인하는 함수.
+*/
+
 int	check(int sum, int index)
 {
 	if (sum == 21 && !(hand[index][2])) // 블랙잭(첫 턴 21)인 경우
@@ -49,6 +56,10 @@ int	check(int sum, int index)
 	else // 합이 21 초과
 		return (-1);
 }
+
+/*
+* 게임의 결과를 출력하는 함수
+*/
 
 int	print_result(void) //int형으로 수정 필요
 {
@@ -97,6 +108,11 @@ int	print_result(void) //int형으로 수정 필요
 	}
 }
 
+
+/*
+* 카드를 뽑는 로직을 가진 함수
+*/
+
 int	draw(void) // 카드 뽑기 로직 (1 ~ 13 중 값을 뽑음)
 {
 	return (1 + rand() % 13);
@@ -115,7 +131,11 @@ void	print_hand(int hand) //가진 패를 출력하는 함수.
 	return ;
 }
 
-int	sum_hand(int index) //가진 패의 값을 더하는 함수.
+/*
+* 가진 패의 값을 더하는 함수.
+*/
+
+int	sum_hand(int index)
 {
 	int	number = 0;
 	int	count_a = 0;
@@ -135,10 +155,12 @@ int	sum_hand(int index) //가진 패의 값을 더하는 함수.
 	return (number);
 }
 
-
-int	player_turn(void) // 플레이어의 턴
+/*
+* 플레이어의 턴을 진행하는 함수
+*/
+int	player_turn(void)
 {
-	char	choice;
+	char	choice; //플레이어의 응답을 저장하는 변수
 
 	while (1)
 	{
@@ -186,9 +208,13 @@ int	cpu_turn(void)
 	}
 }
 
-int	game(void) // 게임 승리 시 0 반환, 패배 시 1 반환
+
+/*
+* 게임을 진행하는 함수 (게임 승리 시 양수 반환, 패배 시 음수 반환, 무승부 시 0 반환)
+*/
+int	game(void)
 {
-	init_game();
+	init_game(); //전역 변수 초기화 기능
 	/*
 	* 플레이어와 PC가 카드 2장을 뽑고 시작함.
 	*/
@@ -206,13 +232,14 @@ int	game(void) // 게임 승리 시 0 반환, 패배 시 1 반환
 	print_hand(hand[0][0]);
 	printf("?(%d)\n", hand[0][1]);
 
+	/*
+	* 플레이어의 카드 확인
+	*/
+
 	printf("당신의 카드: ");
 	for (int i = 0; i < 2; i++)
 		print_hand(hand[1][i]);
 	printf("\n");
-
-	sum[0] = 0;
-	sum[1] = 0;
 
 	for (int i = 0; hand[0][i]; i++)
 	{
@@ -231,7 +258,7 @@ int	game(void) // 게임 승리 시 0 반환, 패배 시 1 반환
 		print_hand(hand[0][i]);
 	printf("\n");
 
-	return (print_result());
+	return (print_result()); //결과를 출력하고 game 함수 종료
 }
 
 int	main(void)
