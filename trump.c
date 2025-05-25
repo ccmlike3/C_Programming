@@ -1,3 +1,7 @@
+/*
+	파일 이름: blackjack.c
+	설명: 트럼프 카드로 진행할 수 있는 블랙잭을 구현한 프로그램.
+*/
 #define _CRT_SECURE_NO_WARNINGS
 #include <stdio.h>
 #include <stdlib.h>
